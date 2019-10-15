@@ -153,11 +153,35 @@ public class Figures
     ///////////////////////////////////////////////////////////////////////
     
     /**
+     * Returns the sides a and b given diagonal and slope.
+     * 
+     * I broke this out into its own function because I didn't want
+     * to duplicate code in the below two methods.
+     * 
+     * @param diag the hypotenuse of the rectangle; must be greater than 0 
+     * @param slope the slope of the hupotenuse; must be not equal to 0
+     * @return an array containing sides a and b
+     */
+    private static double[] getSidesFromDiagAndSlope( double diag, double slope)
+    {
+        double[] sides = { 0.0, 0.0 };
+        
+        // https://math.stackexchange.com/questions/566029/in-a-right-triangle-given-slope-and-length-of-hypotenuse-find-length-of-legs
+        // a^2 + b^2 = c^2
+        double b = diag / Math.sqrt( ( slope * slope ) + 1 );
+        double a = Math.sqrt( ( diag * diag ) / ( b * b ) );
+        sides[0] = a;
+        sides[1] = b;
+        
+        return sides;
+    }
+    
+    /**
      * Given the length and slope of the diagonal of a rectangle,
      * compute the perimeter of the rectangle.
      *
      * @param diag the given length; must be greater than 0
-     * @param slope the given slope; must be greater than 0
+     * @param slope the given slope; must be not equal to 0
      * @return the perimeter of the rectangle, or Double.NaN
      *         if either parameter is invalid
      */
@@ -167,11 +191,10 @@ public class Figures
             return Double.NaN;
         }
         
-        //a^2 + b^2 = c^2
-        double b = diag / Math.sqrt((slope * slope) + 1);
-        double a = (diag * diag) / (b * b);
+        /** An array containing the sides */
+        double[] sides = getSidesFromDiagAndSlope( diag, slope );
         
-        return rectPerimeter(a, b);
+        return rectPerimeter( sides[0], sides[1] );
     }
     
     /**
@@ -189,10 +212,9 @@ public class Figures
             return Double.NaN;
         }
 
-        //a^2 + b^2 = c^2
-        double b = diag / Math.sqrt((slope * slope) + 1);
-        double a = (diag * diag) / (b * b);
+        /** An array containing the sides */
+        double[] sides = getSidesFromDiagAndSlope( diag, slope );
         
-        return rectArea(a, b);
+        return rectArea( sides[0], sides[1] );
     }
 }
